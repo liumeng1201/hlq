@@ -16,9 +16,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lm.android.appclient.MainActivity;
 import com.lm.android.appclient.R;
 import com.lm.android.appclient.Utils;
+import com.lm.android.appclient.model.NetResultInfo;
 import com.lm.android.appclient.net.NetOptTask;
 import com.lm.android.appclient.net.Urls;
 
@@ -36,15 +39,21 @@ public class LoginActivity extends Activity {
 			if (msg.obj.toString().equalsIgnoreCase(Urls.login)) {
 				try {
 					String result = task.get();
-					// TODO
-					// 登陆成功跳转
+					Gson gson = new Gson();
+					NetResultInfo resultInfo = gson.fromJson(result,
+							new TypeToken<NetResultInfo>() {}.getType());
 					loading.dismiss();
+					if (resultInfo.bIsOk.equalsIgnoreCase("1")) {
+						// 登陆成功跳转
+						Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
+					finish();
 				}
 			}
 		}

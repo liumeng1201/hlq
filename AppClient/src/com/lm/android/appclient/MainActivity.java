@@ -1,6 +1,9 @@
 package com.lm.android.appclient;
 
+import com.zbar.lib.CaptureActivity;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,7 +14,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -93,7 +99,25 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			Button scan_qrcode = (Button) rootView.findViewById(R.id.scan_qrcode);
+			scan_qrcode.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(getActivity(), CaptureActivity.class);
+					startActivityForResult(intent, 100);
+				}
+			});
 			return rootView;
+		}
+
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+			if (requestCode == 100) {
+				if (resultCode == 101) {
+					Toast.makeText(getActivity(), data.getStringExtra("scan_result"), Toast.LENGTH_SHORT).show();
+				}
+			}
 		}
 
 		@Override

@@ -72,7 +72,6 @@ public class NetOptTask extends AsyncTask<String, Integer, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		super.onPostExecute(result);
-		Log.d("lm", result);
 		Message msg = new Message();
 		msg.obj = optName;
 		handler.sendMessage(msg);
